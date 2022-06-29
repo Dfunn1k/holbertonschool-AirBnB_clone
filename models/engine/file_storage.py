@@ -1,12 +1,16 @@
 #!/usr/bin/python3
+""""""
+
+from os import path
 import json
+from models.base_model import BaseModel
 
 
 class FileStorage:
     """"""
     __file_path = "file.json"
     __objects = {}
-    
+
     def all(self):
         """"""
         return self.__objects
@@ -26,10 +30,9 @@ class FileStorage:
 
     def reload(self):
         """"""
-        try:
-            with open(self.__file_path, 'r', encoding="utf-8") as f:
-                self.__objects = json.loads(f.read())
-                for key, value in self.__objects.items():
-                    pass#falta implementar
-        except FileNotFoundError:
-            pass
+        if path.exists(self.__file_path):
+            with open(self.__file_path, encoding="utf-8") as file:
+                reader = file.read()
+                self.__objects = json.loads(reader)
+            for key, model in self.__objects.items():
+                self.__objects[key] = BaseModel(**model)
