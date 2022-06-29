@@ -46,11 +46,3 @@ class BaseModel():
                 new_dict[key] = value
 
         return new_dict
-
-
-all_objs = models.storage.all()
-print("-- Reloaded objects --")
-for obj_id in all_objs.keys():
-    obj = all_objs[obj_id]
-    print(obj)
-
