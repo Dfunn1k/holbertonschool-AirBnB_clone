@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import cmd
 """
 User this module for console
@@ -8,8 +9,8 @@ User this module for console
 
 class HBNBCommand(cmd.Cmd):
     """Console for instances that inherit"""
-    prompt = '(hbnb)'
-    
+    prompt = '(hbnb) '
+
     def do_EOF(self, line):
         """Terminates the running program"""
         return True
@@ -31,4 +32,3 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
-
