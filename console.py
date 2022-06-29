@@ -14,15 +14,9 @@ class HBNBCommand(cmd.Cmd):
         """Terminates the running program"""
         return True
 
-    def help_EOF(self):
-        return
-
     def do_quit(self, line):
         """Quit command to exit the program"""
         return True
-
-    def help_quit(self):
-        print("Quit command to exit the program\n")
 
     def emptyline(self):
         """Ignore empty lines"""
