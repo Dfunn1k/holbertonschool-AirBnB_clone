@@ -1,9 +1,10 @@
 import json
 
-class FileStorage():
+
+class FileStorage:
     """"""
-    __file_path="file.json"
-    __objects={}
+    __file_path = "file.json"
+    __objects = {}
     
     def all(self):
         """"""
@@ -18,8 +19,8 @@ class FileStorage():
         """"""
         new_dict = self.__objects.copy()
         for key, value in new_dict.items():
-            new_dict[key]=value.to_dict()
-        with open(self.__file_path, 'w', encoding="utf-8") as f:
+            new_dict[key] = value.to_dict()
+        with open(self.__file_path, "w", encoding="utf-8") as f:
             f.write(json.dumps(new_dict))
 
     def reload(self):
@@ -27,7 +28,7 @@ class FileStorage():
         try:
             with open(self.__file_path, 'r', encoding="utf-8") as f:
                 self.__objects = json.loads(f.read())
-#            for key, value in self.__objects.items():
-#                self.__objects[key] = models.cls
-        except:
+                for key, value in self.__objects.items():
+                    pass#falta implementar
+        except FileNotFoundError:
             pass
