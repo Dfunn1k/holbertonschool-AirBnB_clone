@@ -5,6 +5,11 @@ from os import path
 import json
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class FileStorage:
@@ -36,9 +41,19 @@ class FileStorage:
                 reader = file.read()
                 if len(reader) == 0:
                     return
-                self.__objects = json.loads(reader)
-            for key, model in self.__objects.items():
+                models_json = json.loads(reader)
+            for model in models_json.values():
                 if model['__class__'] == "BaseModel":
-                    self.__objects[key] = BaseModel(**model)
+                    self.new(BaseModel(**model))
                 elif model['__class__'] == "User":
-                    self.__objects[key] = User(**model)
+                    self.new(User(**model))
+                elif model['__class__'] == "State":
+                    self.new(State(**model))
+                elif model['__class__'] == "City":
+                    self.new(City(**model))
+                elif model['__class__'] == "Amenity":
+                    self.new(Amenity(**model))
+                elif model['__class__'] == "Place":
+                    self.new(Place(**model))
+                elif model['__class__'] == "Review":
+                    self.new(Review(**model))
