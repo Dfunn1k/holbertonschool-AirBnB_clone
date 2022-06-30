@@ -45,37 +45,36 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return False
         return True
-    
+
     def is_integer(self, value):
-        try:
-            int(value)
+        """Check if a string is an integer"""
+        if value.isnumeric() or value[0] == '-' and value[1:].isnumeric():
             return True
-        except:
-            return False
+        return False
 
     def is_float(self, value):
-        try:
-            float(value)
+        """Check if a string is a float"""
+        str_partition = value.partition(".")
+        if str_partition[0].isnumeric() and str_partition[-1].isnumeric():
             return True
-        except:
-            return False
+        return False
 
     def checker(self, tokens, op_code):
-            """
-            op_code 
-                1 : verifica las condiciones de clase
-                2 : verifica las condiciones de clase e id
-                3 : verifica las condiciones de clase, id y atributo
-            """
-            check = True
-            if op_code > 0:
-                check = self.class_condition(tokens)
-            if op_code > 1 and check:
-                check = self.id_condition(tokens)
-            if op_code > 2 and check:
-                check = self.attr_condition(tokens)
+        """
+        op_code:
+        1 : verifica las condiciones de clase
+        2 : verifica las condiciones de clase e id
+        3 : verifica las condiciones de clase, id y atributo
+        """
+        check = True
+        if op_code > 0:
+            check = self.class_condition(tokens)
+        if op_code > 1 and check:
+            check = self.id_condition(tokens)
+        if op_code > 2 and check:
+            check = self.attr_condition(tokens)
 
-            return check
+        return check
 
     def do_create(self, line):
         """"""
