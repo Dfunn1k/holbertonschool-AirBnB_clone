@@ -2,9 +2,11 @@
 """"""
 from .engine import file_storage
 from .base_model import BaseModel
+from .user import User
 
 dict_class = {
-    "BaseModel": BaseModel
+    "BaseModel": BaseModel,
+    "User": User
 }
 
 storage = file_storage.FileStorage()
