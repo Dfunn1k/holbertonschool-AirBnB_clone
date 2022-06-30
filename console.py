@@ -59,9 +59,9 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, line):
         """"""
-        Tokens = line.split()
-        if self.check_conditions(Tokens, 2):
-            print(storage.all()[Tokens[0] + "." + Tokens[1]])
+        tokens = line.split()
+        if self.check_conditions(tokens, 2):
+            print(storage.all()[tokens[0] + "." + tokens[1]])
  
     def do_destroy(self, line):
         """"""
