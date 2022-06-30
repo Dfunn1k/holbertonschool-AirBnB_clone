@@ -40,7 +40,6 @@ class HBNBCommand(cmd.Cmd):
                 2 : verifica las condiciones de clase e id
                 3 : 
             """
-            length = len(tokens)
             check = True
             if op_code > 0:
                 check = self.class_condition(tokens)
