@@ -14,7 +14,7 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
 
     def class_condition(self, tokens):
-        """Clase que verificará las condiciones de clase"""
+        """Metodo de Clase que verificará las condiciones de clase"""
         length = len(tokens)
         if length == 0:
             print("** class name missing **")
@@ -22,9 +22,10 @@ class HBNBCommand(cmd.Cmd):
         elif tokens[0] not in dict_class.keys():
             print("** class doesn't exist **")
             return False
+        return True
 
     def id_condition(self, tokens):
-        """Clase que verificará las condiciones de ID"""
+        """Metodo de Clase que verificará las condiciones de ID"""
         length = len(tokens)
         if length == 1:
             print("** instance id missing **")
@@ -32,19 +33,47 @@ class HBNBCommand(cmd.Cmd):
         elif (tokens[0] + "." + tokens[1]) not in list(storage.all().keys()):
             print("** no instance found **")
             return False
+        return True
+
+    def attr_condition(self, tokens):
+        """Metodo de Clase que verificará las condiciones de atributo"""
+        length = len(tokens)
+        if length == 2:
+            print("** attribute name missing **")
+            return False
+        elif length == 3:
+            print("** value missing **")
+            return False
+        return True
+    
+    def is_integer(self, value):
+        try:
+            int(value)
+            return True
+        except:
+            return False
+
+    def is_float(self, value):
+        try:
+            float(value)
+            return True
+        except:
+            return False
 
     def checker(self, tokens, op_code):
             """
             op_code 
                 1 : verifica las condiciones de clase
                 2 : verifica las condiciones de clase e id
-                3 : 
+                3 : verifica las condiciones de clase, id y atributo
             """
             check = True
             if op_code > 0:
                 check = self.class_condition(tokens)
             if op_code > 1 and check:
                 check = self.id_condition(tokens)
+            if op_code > 2 and check:
+                check = self.attr_condition(tokens)
 
             return check
 
@@ -53,21 +82,51 @@ class HBNBCommand(cmd.Cmd):
         tokens = line.split()
         if self.checker(tokens, 1):
             obj = dict_class[tokens[0]]()
-            storage.save()
+            obj.save()
             print(obj.id)
 
     def do_show(self, line):
         """"""
         tokens = line.split()
-        if self.check_conditions(tokens, 2):
+        if self.checker(tokens, 2):
             print(storage.all()[tokens[0] + "." + tokens[1]])
- 
+
     def do_destroy(self, line):
         """"""
         tokens = line.split()
-        if self.check_conditions(tokens, 2):
+        if self.checker(tokens, 2):
             del storage.all()[tokens[0] + "." + tokens[1]]
             storage.save()
+
+    def do_all(self, line):
+        """"""
+        tokens = line.split()
+        if len(tokens) == 0:
+            all_objs = storage.all()
+            for obj in all_objs.values():
+                print(obj)
+        elif self.checker(tokens, 1):
+            all_objs = storage.all()
+            for obj_key in all_objs.keys():
+                model_name = obj_key.partition(".")[0]
+                if model_name == tokens[0]:
+                    print(all_objs[obj_key])
+
+    def do_update(self, line):
+        """"""
+        tokens = line.split()
+        if self.checker(tokens, 3):
+            all_objs = storage.all()
+            obj = all_objs[tokens[0] + "." + tokens[1]]
+            key, value = tokens[2], tokens[3]
+            if value[0] == '"' and value[-1] == '"':
+                value = value[1:-1]
+            elif self.is_integer(value):
+                value = int(value)
+            elif self.is_float(value):
+                value = float(value)
+            setattr(obj, key, value)
+            obj.save()
 
     def do_EOF(self, line):
         """Terminates the running program"""
