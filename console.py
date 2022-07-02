@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-import cmd
-from models import storage
-from models import dict_class
 """
 User this module for console
 
 (HBNB CONSOLE)
 """
+import cmd
+from models import storage
+from models import dict_class
 
 
 class HBNBCommand(cmd.Cmd):
@@ -61,6 +61,7 @@ class HBNBCommand(cmd.Cmd):
 
     def checker(self, tokens, op_code):
         """
+        Check the conditions of our cmd engine
         op_code:
         1 : verifica las condiciones de clase
         2 : verifica las condiciones de clase e id
@@ -77,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
         return check
 
     def do_create(self, line):
-        """"""
+        """Creates a new instance of a model"""
         tokens = line.split()
         if self.checker(tokens, 1):
             obj = dict_class[tokens[0]]()
@@ -85,20 +86,26 @@ class HBNBCommand(cmd.Cmd):
             print(obj.id)
 
     def do_show(self, line):
-        """"""
+        """
+        Prints the string representation of an instance
+        based on the class name and id
+        """
         tokens = line.split()
         if self.checker(tokens, 2):
             print(storage.all()[tokens[0] + "." + tokens[1]])
 
     def do_destroy(self, line):
-        """"""
+        """Deletes an instance based on the class name and id"""
         tokens = line.split()
         if self.checker(tokens, 2):
             del storage.all()[tokens[0] + "." + tokens[1]]
             storage.save()
 
     def do_all(self, line):
-        """"""
+        """
+        Prints all string representation of all instances
+        based or not on the class name
+        """
         tokens = line.split()
         if len(tokens) == 0:
             all_objs = storage.all()
@@ -112,7 +119,10 @@ class HBNBCommand(cmd.Cmd):
                     print(all_objs[obj_key])
 
     def do_update(self, line):
-        """"""
+        """
+        Updates an instance based on the class name and id
+        by adding or updating attribute
+        """
         tokens = line.split()
         if self.checker(tokens, 3):
             all_objs = storage.all()
