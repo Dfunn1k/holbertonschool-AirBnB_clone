@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Amenity Class implementation"""
-from .base_model import BaseModel
+from models.base_model import BaseModel
 
 
 class Amenity(BaseModel):
