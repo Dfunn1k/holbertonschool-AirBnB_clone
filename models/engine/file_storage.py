@@ -43,17 +43,5 @@ class FileStorage:
                     return
                 models_json = json.loads(reader)
             for model in models_json.values():
-                if model['__class__'] == "BaseModel":
-                    self.new(BaseModel(**model))
-                elif model['__class__'] == "User":
-                    self.new(User(**model))
-                elif model['__class__'] == "State":
-                    self.new(State(**model))
-                elif model['__class__'] == "City":
-                    self.new(City(**model))
-                elif model['__class__'] == "Amenity":
-                    self.new(Amenity(**model))
-                elif model['__class__'] == "Place":
-                    self.new(Place(**model))
-                elif model['__class__'] == "Review":
-                    self.new(Review(**model))
+                cls_name = model["__class__"]
+                self.new(eval(cls_name)(**model))
