@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""""""
+"""Init file to models package"""
 from .engine import file_storage
 from .base_model import BaseModel
 from .user import User
