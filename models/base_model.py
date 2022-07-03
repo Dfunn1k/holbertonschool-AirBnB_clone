@@ -7,6 +7,7 @@ import models
 
 class BaseModel():
     """BaseModel class"""
+
     def __init__(self, *args, **kwargs):
         """Initial instance"""
         if not kwargs:
@@ -16,13 +17,11 @@ class BaseModel():
             models.storage.new(self)
 
         else:
-            new_dict = {}
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
-                    new_dict[key] = datetime.fromisoformat(value)
+                    self.__dict__[key] = datetime.fromisoformat(value)
                 elif key != '__class__':
-                    new_dict[key] = value
-            self.__dict__.update(new_dict)
+                    self.__dict__[key] = value
 
     def __str__(self):
         """String representation of the instance"""
