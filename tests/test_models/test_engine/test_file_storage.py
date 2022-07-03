@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Unittest for FileStorage class"""
+from typing import Type
 import unittest
 from os import path
 import json
@@ -123,7 +124,7 @@ class TestFileStorage_methods(unittest.TestCase):
 
     def test_save_with_arg(self):
         """Testing for save method with arg"""
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(TypeError):
             models.storage.save(None)
 
     def test_reload(self):
@@ -147,18 +148,18 @@ class TestFileStorage_methods(unittest.TestCase):
         models.storage.reload()
         my_objs = FileStorage._FileStorage__objects
         self.assertIn("BaseModel." + bm.id, my_objs)
-        self.assertIn("User." + bm.us, my_objs)
-        self.assertIn("State." + bm.st, my_objs)
-        self.assertIn("Place." + bm.pl, my_objs)
-        self.assertIn("City." + bm.ct, my_objs)
-        self.assertIn("Amenity." + bm.am, my_objs)
-        self.assertIn("Review." + bm.rv, my_objs)
+        self.assertIn("User." + us.id, my_objs)
+        self.assertIn("State." + st.id, my_objs)
+        self.assertIn("Place." + pl.id, my_objs)
+        self.assertIn("City." + ct.id, my_objs)
+        self.assertIn("Amenity." + am.id, my_objs)
+        self.assertIn("Review." + rv.id, my_objs)
 
     def test_reload_with_arg(self):
         """Testing for reload method with arg"""
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(TypeError):
             models.storage.reload(None)
 
     def test_reload_no_file(self):
         """Testing for new method with all models"""
-        pass
+        self.assertEqual(None, models.storage.reload())
