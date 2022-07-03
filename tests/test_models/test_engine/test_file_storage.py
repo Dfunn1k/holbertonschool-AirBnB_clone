@@ -163,3 +163,7 @@ class TestFileStorage_methods(unittest.TestCase):
     def test_reload_no_file(self):
         """Testing for new method with all models"""
         self.assertEqual(None, models.storage.reload())
+
+
+if __name__ == '__main__':
+    unittest.main()
