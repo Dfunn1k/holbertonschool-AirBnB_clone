@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """Unittest for Amenity class"""
 
 from datetime import datetime
