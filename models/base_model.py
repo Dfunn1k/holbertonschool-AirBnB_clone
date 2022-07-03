@@ -9,7 +9,13 @@ class BaseModel():
     """BaseModel class"""
 
     def __init__(self, *args, **kwargs):
-        """Initial instance"""
+        """
+        Initial a new BaseModel instance
+        
+        Attributes:
+            *args (any): Unused.
+            *kwargs (dict): key/value pair of attributes.
+        """
         if not kwargs:
             self.id = str(uuid.uuid4())
             self.updated_at = datetime.now()
