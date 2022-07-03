@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import cmd
+import re
 from models import storage
 from models import dict_class
 """
@@ -140,6 +141,37 @@ class HBNBCommand(cmd.Cmd):
         self.lastcmd = ''
         return cmd.Cmd.emptyline(self)
 
+    def precmd(self, line):
+        """La función hace lo que deberia pero se puede refactorizar
+        Usamos regex para partir el texto como "User.all()" y retornar "all User" que si
+        puede ser interpretado por la consola.
+        PRECMD puede hacer algo con la linea ingresada antes de que se interprete la linea de comandos
+        más información: https://docs.python.org/3.8/library/cmd.html#cmd.Cmd.precmd:~:text=una%20lista%20vac%C3%ADa.-,Cmd.precmd(%20l%C3%ADnea%20),-%C2%B6
+        Solo he probado su funcionamiento con "all" "count"
+        """
+        token = line.split()
+        var = token[0][0]
+        result = re.split('([A-Z][a-z]*)\.([a-z]*)..([^"]*)',line)
+        if 64 < ord(var) < 91:
+            if result[2] == "all" or result[2] == "count":
+                return f"{result[2]} {result[1]} "
+            elif result[2] == "show" or result[2] == "destroy":
+                return f"{result[2]} {result[1]} {result[3]}"
+        else:
+            return line
+
+    def do_count(self, line):
+        """"""
+        tokens = line.split()
+        if (len(tokens) != 1):
+            print("FAltan argumentos")
+        else:
+            count = 0
+            cls_name = tokens[0]
+            for value in storage.all().values():
+                if value.__class__.__name__ == cls_name:
+                    count += 1
+            print(count)
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
