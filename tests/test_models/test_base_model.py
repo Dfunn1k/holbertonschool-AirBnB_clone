@@ -21,8 +21,8 @@ class TestCodeFormat(unittest.TestCase):
         """
         pycostyle = pycodestyle.StyleGuide(quiet=True)
         result = pycostyle.check_files(['models/base_model.py'])
-        self.assertEqual(result.total_errors, 0,
-                "Found code style errors (and warnings).")
+        msg = "Found code style errors (and warnings)."
+        self.assertEqual(result.total_errors, 0, msg)
 
 
 class Test_docstrings(unittest.TestCase):
@@ -41,8 +41,8 @@ class Test_docstrings(unittest.TestCase):
         """
         Test for exist module docstrings
         """
-        self.assertIsNotNone(models.base_model.__doc__,
-                "base_model.py file needs a docstrings")
+        msg = "base_model.py file needs a docstrings"
+        self.assertIsNotNone(models.base_model.__doc__, msg)
         self.assertTrue(len(__doc__) > 0, " base_model.py have docstrings")
         self.assertFalse(len(__doc__) < 0, " base_model  have docstrings")
 
@@ -55,8 +55,8 @@ class Test_Class_BaseModel(unittest.TestCase):
         self.assertEqual(type(instance), BaseModel)
         self.assertTrue(type(instance) == BaseModel)
         self.assertIs(type(instance), BaseModel)
-        instance.name = "Ineffable"
-        instance.email = "Ineffable@ubuntu.com"
+        instance.name = "example"
+        instance.email = "example@ubuntu.com"
         instance.number = 300
         expectec_attrs_types = {
             "id": str,
@@ -76,8 +76,8 @@ class Test_Class_BaseModel(unittest.TestCase):
                 "number",
                 "__class__"]
         self.assertCountEqual(dict_inst.keys(), expectec_attrs)
-        self.assertEqual(dict_inst['name'], 'Ineffable')
-        self.assertEqual(dict_inst['email'], 'Ineffable@ubuntu.com')
+        self.assertEqual(dict_inst['name'], 'example')
+        self.assertEqual(dict_inst['email'], 'example@ubuntu.com')
         self.assertEqual(dict_inst['number'], 300)
         self.assertEqual(dict_inst['__class__'], 'BaseModel')
 
@@ -86,8 +86,8 @@ class Test_Class_BaseModel(unittest.TestCase):
                 self.assertIn(attr, instance.__dict__)
                 self.assertIs(type(instance.__dict__[attr]), types)
         self.assertTrue(mock_storage.new.called)
-        self.assertEqual(instance.name, "Ineffable")
-        self.assertEqual(instance.email, "Ineffable@ubuntu.com")
+        self.assertEqual(instance.name, "example")
+        self.assertEqual(instance.email, "example@ubuntu.com")
         self.assertEqual(instance.number, 300)
 
     def test_datetime(self):
@@ -99,7 +99,7 @@ class Test_Class_BaseModel(unittest.TestCase):
         updated_at = datetime.now()
         self.assertEqual(created_at <= instance1.created_at, True)
         self.assertEqual(instance1.created_at <= updated_at, True)
-        sleep(2)
+        sleep(0.5)
         created_at = datetime.now()
         instance2 = BaseModel()
         updated_at = datetime.now()
@@ -115,8 +115,7 @@ class Test_Class_BaseModel(unittest.TestCase):
         instance1 = BaseModel()
         instance2 = BaseModel()
         instance3 = BaseModel()
-        list_instances = [instance1, instance2,
-                instance3]
+        list_instances = [instance1, instance2, instance3]
         for instance in list_instances:
             ins_uuid = instance.id
             with self.subTest(uuid=ins_uuid):
@@ -128,8 +127,9 @@ class Test_Class_BaseModel(unittest.TestCase):
     def test_str_method(self):
         """Testing returns STR method"""
         instance6 = BaseModel()
-        string_output = "[BaseModel] ({}) {}".format(instance6.id,
-                instance6.__dict__)
+        bm_id = instance6.id
+        bm_dict = instance6.__dict__
+        string_output = "[BaseModel] ({}) {}".format(bm_id, bm_dict)
         self.assertEqual(string_output, str(instance6))
 
     @mock.patch('models.storage')
@@ -137,11 +137,11 @@ class Test_Class_BaseModel(unittest.TestCase):
         """Testing save method"""
         instance = BaseModel()
         created_ats = instance.created_at
-        sleep(2)
+        sleep(0.5)
         updated_ats = instance.updated_at
         instance.save()
         saved_inst = instance.created_at
-        sleep(2)
+        sleep(0.5)
         updated_inst = instance.updated_at
         self.assertNotEqual(updated_ats, updated_inst)
         self.assertEqual(created_ats, saved_inst)
