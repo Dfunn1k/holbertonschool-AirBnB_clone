@@ -1,17 +1,11 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
-import cmd
-import re
-from models import storage
-from models import dict_class
-=======
->>>>>>> f5f7ca36ee53b60d9841ae356200b7ea657ed5d7
 """
 User this module for console
 
 (HBNB CONSOLE)
 """
 import cmd
+import re
 from models import storage
 from models import dict_class
 
@@ -20,72 +14,14 @@ class HBNBCommand(cmd.Cmd):
     """Console for instances that inherit"""
     prompt = '(hbnb) '
 
-    def class_condition(self, tokens):
-        """Metodo de Clase que verificará las condiciones de clase"""
-        length = len(tokens)
-        if length == 0:
-            print("** class name missing **")
-            return False
-        elif tokens[0] not in dict_class.keys():
-            print("** class doesn't exist **")
-            return False
-        return True
-
-    def id_condition(self, tokens):
-        """Metodo de Clase que verificará las condiciones de ID"""
-        length = len(tokens)
-        if length == 1:
-            print("** instance id missing **")
-            return False
-        elif (tokens[0] + "." + tokens[1]) not in list(storage.all().keys()):
-            print("** no instance found **")
-            return False
-        return True
-
-    def attr_condition(self, tokens):
-        """Metodo de Clase que verificará las condiciones de atributo"""
-        length = len(tokens)
-        if length == 2:
-            print("** attribute name missing **")
-            return False
-        elif length == 3:
-            print("** value missing **")
-            return False
-        return True
-
-    def is_integer(self, value):
-        """Check if a string is an integer"""
-        if value.isnumeric() or value[0] == '-' and value[1:].isnumeric():
-            return True
-        return False
-
-    def is_float(self, value):
-        """Check if a string is a float"""
-        str_partition = value.partition(".")
-        if str_partition[0].isnumeric() and str_partition[-1].isnumeric():
-            return True
-        return False
-
-    def checker(self, tokens, op_code):
-        """
-        Check the conditions of our cmd engine
-        op_code:
-        1 : verifica las condiciones de clase
-        2 : verifica las condiciones de clase e id
-        3 : verifica las condiciones de clase, id y atributo
-        """
-        check = True
-        if op_code > 0:
-            check = self.class_condition(tokens)
-        if op_code > 1 and check:
-            check = self.id_condition(tokens)
-        if op_code > 2 and check:
-            check = self.attr_condition(tokens)
-
-        return check
-
     def do_create(self, line):
-        """Creates a new instance of a model"""
+        """
+        Creates a new instance of BaseModel and Storage in JSON file.
+
+        Usage:
+            (hbnb) <classname>.create()
+            (hbnb) create <classname>
+        """
         tokens = line.split()
         if self.checker(tokens, 1):
             obj = dict_class[tokens[0]]()
@@ -95,14 +31,23 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, line):
         """
         Prints the string representation of an instance
-        based on the class name and id
+
+        Usage:
+            (hbnb) <classname>.show("id")
+            (hbnb) show <classname> id
         """
         tokens = line.split()
         if self.checker(tokens, 2):
             print(storage.all()[tokens[0] + "." + tokens[1]])
 
     def do_destroy(self, line):
-        """Deletes an instance based on the class name and id"""
+        """
+        Deletes an instance based on the class name and id
+
+        Usage:
+            (hbnb) <classname>.destroy("id")
+            (hbnb) destroy <classname> id
+        """
         tokens = line.split()
         if self.checker(tokens, 2):
             del storage.all()[tokens[0] + "." + tokens[1]]
@@ -110,8 +55,11 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, line):
         """
-        Prints all string representation of all instances
-        based or not on the class name
+        Prints all string representation of all instances by classname
+
+        Usage:
+            (hbnb) <classname>.all()
+            (hbnb) all <classname>
         """
         tokens = line.split()
         if len(tokens) == 0:
@@ -127,8 +75,11 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """
-        Updates an instance based on the class name and id
-        by adding or updating attribute
+        Updates an instance(add or set attribute)
+
+        Usage:
+            (hbnb) <classname>.update("id", "Attribute", "Value")
+            (hbnb) update <classname> id Attribute Value
         """
         tokens = line.split()
         if self.checker(tokens, 3):
@@ -144,40 +95,13 @@ class HBNBCommand(cmd.Cmd):
             setattr(obj, key, value)
             obj.save()
 
-    def do_EOF(self, line):
-        """Terminates the running program"""
-        return True
-
-    def do_quit(self, line):
-        """Quit command to exit the program"""
-        return True
-
-    def emptyline(self):
-        """Ignore empty lines"""
-        self.lastcmd = ''
-        return cmd.Cmd.emptyline(self)
-
-    def precmd(self, line):
-        """La función hace lo que deberia pero se puede refactorizar
-        Usamos regex para partir el texto como "User.all()" y retornar "all User" que si
-        puede ser interpretado por la consola.
-        PRECMD puede hacer algo con la linea ingresada antes de que se interprete la linea de comandos
-        más información: https://docs.python.org/3.8/library/cmd.html#cmd.Cmd.precmd:~:text=una%20lista%20vac%C3%ADa.-,Cmd.precmd(%20l%C3%ADnea%20),-%C2%B6
-        Solo he probado su funcionamiento con "all" "count"
-        """
-        token = line.split()
-        var = token[0][0]
-        result = re.split('([A-Z][a-z]*)\.([a-z]*)..([^"]*)',line)
-        if 64 < ord(var) < 91:
-            if result[2] == "all" or result[2] == "count":
-                return f"{result[2]} {result[1]} "
-            elif result[2] == "show" or result[2] == "destroy":
-                return f"{result[2]} {result[1]} {result[3]}"
-        else:
-            return line
-
     def do_count(self, line):
-        """"""
+        """Shows the number of instances por class.
+
+        Usage:
+            (hbnb) <classname>.count()
+            (hbnb) count <classname>
+        """
         tokens = line.split()
         if (len(tokens) != 1):
             print("FAltan argumentos")
@@ -188,6 +112,184 @@ class HBNBCommand(cmd.Cmd):
                 if value.__class__.__name__ == cls_name:
                     count += 1
             print(count)
+
+    def precmd(self, line):
+        """Format user input before executing the command, to direct them
+        to already existing commands.
+
+        Args:
+            line (str): Line entered by the user.
+
+        Attributes:
+            token (list): Separate user input.
+            var (str): the first char of the first word.
+            result (str): patterns found by regex.
+
+        Returns:
+            str: format line to direct them commands.
+        """
+
+        token = line.split()
+        var = token[0][0]
+        result = re.split(r'([A-Z][a-z]*)\.([a-z]*)..([^"]*)', line)
+        if 64 < ord(var) < 91:
+            if result[2] == "all" or result[2] == "count":
+                return f"{result[2]} {result[1]} "
+            elif result[2] == "show" or result[2] == "destroy":
+                return f"{result[2]} {result[1]} {result[3]}"
+        else:
+            return line
+
+    def checker(self, tokens, op_code):
+        """
+        Validates if the parameters required for the operation
+        of the executing command were passed.
+
+        Args:
+            tokens (str): Separate user input.
+            op_code (int): Operation code to know what conditions to check.
+                1 => class condition
+                2 => id condition
+                3 => attributes condition
+        Attributes:
+            check (bool): Mark.
+
+        Return:
+            -True if it was successful.
+            -False if unsuccessful.
+        """
+        check = True
+        if op_code > 0:
+            check = self.class_condition(tokens)
+        if op_code > 1 and check:
+            check = self.id_condition(tokens)
+        if op_code > 2 and check:
+            check = self.attr_condition(tokens)
+        return check
+
+    def class_condition(self, tokens):
+        """
+        Class method that will check the class conditions.
+
+        Args:
+            tokens (str): Separate user input.
+
+        Attributes;
+            length (int): length of the tokens.
+
+        Return:
+            -True if it was successful.
+            -False if unsuccessful.
+        """
+        length = len(tokens)
+        if length == 0:
+            print("** class name missing **")
+            return False
+        elif tokens[0] not in dict_class.keys():
+            print("** class doesn't exist **")
+            return False
+        return True
+
+    def id_condition(self, tokens):
+        """
+        Class method that will check ID conditions.
+
+        Args:
+            tokens (str): Separate user input.
+
+        Attributes;
+            length (int): length of the tokens.
+
+        Return:
+            -True if it was successful.
+            -False if unsuccessful.
+        """
+        length = len(tokens)
+        if length == 1:
+            print("** instance id missing **")
+            return False
+        elif (tokens[0] + "." + tokens[1]) not in list(storage.all().keys()):
+            print("** no instance found **")
+            return False
+        return True
+
+    def attr_condition(self, tokens):
+        """
+        Class method that will check attribute conditions.
+
+        Args:
+            tokens (str): Separate user input.
+
+        Attributes;
+            length (int): length of the tokens.
+
+        Return:
+            -True if it was successful.
+            -False if unsuccessful.
+        """
+        length = len(tokens)
+        if length == 2:
+            print("** attribute name missing **")
+            return False
+        elif length == 3:
+            print("** value missing **")
+            return False
+        return True
+
+    def is_integer(self, value):
+        """
+        Check if a string is an integer.
+
+        Args:
+            value (int): value to check
+
+        Return:
+            -True if it was successful.
+            -False if unsuccessful.
+        """
+        if value.isnumeric() or value[0] == '-' and value[1:].isnumeric():
+            return True
+        return False
+
+    def is_float(self, value):
+        """
+        Check if a string is a float.
+
+        Args:
+            value (int): value to check.
+
+        Return:
+            -True if it was successful.
+            -False if unsuccessful.
+        """
+        str_partition = value.partition(".")
+        if str_partition[0].isnumeric() and str_partition[-1].isnumeric():
+            return True
+        return False
+
+    def do_EOF(self, line):
+        """Terminates the running program."""
+        return True
+
+    def do_quit(self, line):
+        """Quit command to exit the program."""
+        return True
+
+    def emptyline(self):
+        """Ignore empty lines."""
+        self.lastcmd = ''
+        return cmd.Cmd.emptyline(self)
+
+    def do_help(self, arg):
+        """
+        Help for commands.
+
+        Usage:
+            (hbnb) help // List available commands
+            (hbnb) help <command> // Detailed help on the command(cmd)
+        """
+        return super().do_help(arg)
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
