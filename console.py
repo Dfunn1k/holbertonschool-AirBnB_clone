@@ -110,7 +110,7 @@ class HBNBCommand(cmd.Cmd):
         """
         tokens = line.split()
         if (len(tokens) != 1):
-            print("FAltan argumentos")
+            cmd.Cmd.do_help(self, "count")
         else:
             count = 0
             cls_name = tokens[0]
@@ -138,9 +138,9 @@ class HBNBCommand(cmd.Cmd):
         token = line.split()
         if len(token) == 0 or token[0] == 'EOF':
             return line
-        var = token[0][0]
-        result = re.split(r'([A-Z][a-z]*)\.([a-z]*)..([^"]*)', line)
-        if 64 < ord(var) < 91:
+        
+        if re.search(r'([\w]*)\.([a-z]*)..([^"]*)', line):
+            result = re.split(r'([\w]*)\.([a-z]*)..([^"]*)', line)
             if result[2] == "all" or result[2] == "count":
                 return f"{result[2]} {result[1]} "
             elif result[2] == "show" or result[2] == "destroy":
