@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #!/usr/bin/env python3
 
 """Test Base Model"""
@@ -150,3 +151,7 @@ class Test_Class_BaseModel(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main
+=======
+#!/usr/bin/python3
+"""Unittest for BaseModel class"""
+>>>>>>> f5f7ca36ee53b60d9841ae356200b7ea657ed5d7
