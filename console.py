@@ -136,6 +136,8 @@ class HBNBCommand(cmd.Cmd):
         """
 
         token = line.split()
+        if len(token) == 0 or token[0] == 'EOF':
+            return line
         var = token[0][0]
         result = re.split(r'([A-Z][a-z]*)\.([a-z]*)..([^"]*)', line)
         if 64 < ord(var) < 91:
