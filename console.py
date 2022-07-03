@@ -11,7 +11,13 @@ from models import dict_class
 
 
 class HBNBCommand(cmd.Cmd):
-    """Console for instances that inherit"""
+    """
+    Template for instances that inherit from the Cmd class in the cmd module,
+    so you can run a console
+
+    Attributes:
+        prompt (str): The prompt issued to solicit input.
+    """
     prompt = '(hbnb) '
 
     def do_create(self, line):
