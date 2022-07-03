@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """Unittest for FileStorage class"""
-from typing import Type
 import unittest
 from os import path
 import json
 import models
+import inspect
+import pycodestyle
 from datetime import datetime
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
@@ -14,6 +15,41 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+
+
+class TestCodeFormat(unittest.TestCase):
+    """
+    A class to test pep8 on file_storage file"""
+    def test_pycodestyle(self):
+        """
+        Test pep8 format
+        """
+        pycostyle = pycodestyle.StyleGuide(quiet=True)
+        result = pycostyle.check_files(['models/engine/file_storage.py'])
+        msg = "Found code style errors (and warnings)."
+        self.assertEqual(result.total_errors, 0, msg)
+
+
+class Test_docstrings(unittest.TestCase):
+    """Test docstrings"""
+    @classmethod
+    def setup_class(self):
+        """
+        inspect.getmembers(object, [predicate])
+        Return all the members of an object in a list of (name, value)
+        pairs sorted by name
+        only members for which the predicate returns a true value are included
+        """
+        self.obj_members(FileStorage, inspect.isfunction)
+
+    def test_module_dostring(self):
+        """
+        Test for exist module docstrings
+        """
+        msg = "file_storage.py file needs a docstrings"
+        self.assertIsNotNone(models.engine.file_storage.__doc__, msg)
+        self.assertTrue(len(__doc__) > 0, " file_storage.py have docstrings")
+        self.assertFalse(len(__doc__) < 0, " file_storage  have docstrings")
 
 
 class TestFileStorage_instantiation(unittest.TestCase):
