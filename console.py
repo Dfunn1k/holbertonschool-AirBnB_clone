@@ -138,10 +138,6 @@ class HBNBCommand(cmd.Cmd):
         token = line.split()
         if len(token) == 0 or token[0] == 'EOF':
             return line
-<<<<<<< HEAD
-        
-=======
->>>>>>> 02191d4164b93ce29e6dbcc8db893fb385ba9153
         if re.search(r'([\w]*)\.([a-z]*)..([^"]*)', line):
             result = re.split(r'([\w]*)\.([a-z]*)..([^"]*)', line)
             if result[2] == "all" or result[2] == "count":
