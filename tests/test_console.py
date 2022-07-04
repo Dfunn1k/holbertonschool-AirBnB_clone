@@ -41,8 +41,8 @@ class TestCodeFormat(unittest.TestCase):
         """
         pycostyle = pycodestyle.StyleGuide(quiet=True)
         result = pycostyle.check_files(['console.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+        msg = "Found code style errors (and warnings)."
+        self.assertEqual(result.total_errors, 0, msg)
 
 
 class Test_docstrings(unittest.TestCase):
@@ -62,8 +62,8 @@ class Test_docstrings(unittest.TestCase):
         """
         Test for exist module docstrings
         """
-        self.assertIsNotNone(console.__doc__,
-                             "console.py file needs a docstrings")
+        msg = "console.py file needs a docstrings"
+        self.assertIsNotNone(console.__doc__, msg)
         self.assertTrue(len(__doc__) > 0, "console.py have docstrings")
         self.assertTrue(len(__doc__) > 0, " console don't have docstrings")
         self.assertIsNotNone(HBNBCommand.do_show.__doc__)
@@ -169,7 +169,7 @@ class Test_Help(unittest.TestCase):
             update <class name> <id> <attribute name> "<attribute value>"\n \
             - Ex:\n \
             $ update BaseModel 1234-1234-1234 email\
-                 "aibnb@holbertonschool.com"\n \
+                "aibnb@holbertonschool.com"\n \
             - Only one attribute can be updated at the time\n'
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help update")
@@ -188,29 +188,26 @@ class CreateTest(unittest.TestCase):
         """testing creat input"""
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create")
-            self.assertEqual("** class name missing **\n",
-                             f.getvalue())
+            self.assertEqual("** class name missing **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create holbieees")
-            self.assertEqual("** class doesn't exist **\n",
-                             f.getvalue())
+            self.assertEqual("** class doesn't exist **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create BaseModel")
             HBNBCommand().onecmd("create User")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("all User")
             self.assertEqual(
-                            '["[User', f.getvalue()[:7])
+                            '[User] ', f.getvalue()[:7])
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create BaseModel")
-        self.assertRegex(f.getvalue(), '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5]'
-                                       '[0-9a-f]{3}-[89ab][0-9a-f]{3}-'
-                                       '[0-9a-f]{12}$')
+        regex_p1 = "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5]"
+        regex_p2 = "[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        regex = regex_p1 + regex_p2
+        self.assertRegex(f.getvalue(), regex)
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create User")
-        self.assertRegex(f.getvalue(), '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5]'
-                                       '[0-9a-f]{3}-[89ab][0-9a-f]{3}-'
-                                       '[0-9a-f]{12}$')
+        self.assertRegex(f.getvalue(), regex)
 
 
 class ShowTest(unittest.TestCase):
@@ -233,16 +230,13 @@ class ShowTest(unittest.TestCase):
         id = f.getvalue()
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("show")
-            self.assertEqual("** class name missing **\n",
-                             f.getvalue())
+            self.assertEqual("** class name missing **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("show holbieees")
-            self.assertEqual("** class doesn't exist **\n",
-                             f.getvalue())
+            self.assertEqual("** class doesn't exist **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("show User")
-            self.assertEqual("** instance id missing **\n",
-                             f.getvalue())
+            self.assertEqual("** instance id missing **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("show" + "User " + id)
         self.assertIsNotNone(f.getvalue())
@@ -290,20 +284,16 @@ class ShowTest(unittest.TestCase):
         """testing destroy's behaviour"""
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("destroy")
-            self.assertEqual("** class name missing **\n",
-                             f.getvalue())
+            self.assertEqual("** class name missing **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("destroy holbies")
-            self.assertEqual("** class doesn't exist **\n",
-                             f.getvalue())
+            self.assertEqual("** class doesn't exist **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("destroy User")
-            self.assertEqual("** instance id missing **\n",
-                             f.getvalue())
+            self.assertEqual("** instance id missing **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("destroy User 123123")
-            self.assertEqual("** no instance found **\n",
-                             f.getvalue())
+            self.assertEqual("** no instance found **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("User.destroy(1)")
             expectet = "*** Unknown syntax: User.destroy(1)\n"
@@ -324,9 +314,6 @@ class ShowTest(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("all 123123")
             self.assertEqual("** class doesn't exist **\n", f.getvalue())
-#        with patch('sys.stdout', new=StringIO()) as f:
-#            HBNBCommand().onecmd("all State")
-#            self.assertEqual('["[Stat', f.getvalue()[:7])
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("ssss.all()")
         self.assertEqual(f.getvalue(), '*** Unknown syntax: ssss.all()\n')
@@ -350,8 +337,7 @@ class ShowTest(unittest.TestCase):
             self.assertEqual("** class name missing **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update holbies")
-            self.assertEqual("** class doesn't exist **\n",
-                             f.getvalue())
+            self.assertEqual("** class doesn't exist **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update BaseModel")
             self.assertEqual(
@@ -382,4 +368,3 @@ class ShowTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
