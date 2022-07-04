@@ -134,11 +134,18 @@ class HBNBCommand(cmd.Cmd):
         Returns:
             str: format line to direct them commands.
         """
-
         token = line.split()
         if len(token) == 0 or token[0] == 'EOF':
             return line
-        if re.search(r'([\w]*)\.([a-z]*)..([^"]*)', line):
+
+        expres = r'([\w]*)\.([a-z]*)..([^"]*)", "([^"]+)", "?([\w]+)"?'
+
+        if re.search(expres, line):
+            result = re.split(expres, line)
+            if result[2] == "update":
+                return f'{result[2]} {result[1]}\
+                {result[3]} {result[4]} {str(result[5])}'
+        elif re.search(r'([\w]*)\.([a-z]*)..([^"]*)', line):
             result = re.split(r'([\w]*)\.([a-z]*)..([^"]*)', line)
             if result[2] == "all" or result[2] == "count":
                 return f"{result[2]} {result[1]} "
